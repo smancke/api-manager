@@ -49,21 +49,38 @@ type Account struct {
 	PlanId string `json:"planId"`
 }
 
-type ApiKey struct {
+type ApiKeyInfo struct {
 	// The account, the key belongs to
-	AccountId       string `json:"id"`
-	Key             string `json:"key"`
-	Secret          string `json:"secret"`
-	UnsecuredAccess Limit  `json:"unsecuredAccess"`
-	SecuredAccess   Limit  `json:"securedAccess"`
+	AccountId string `json:"id"`
+
+	// ApiCallsPerMonth is the maximum number of api calls, allowed for this key
+	ApiCallsPerMonth int `json:"apiCallsPerMonth"`
+
+	// Key
+	Key string `json:"key"`
+
+	// Secret
+	Secret string `json:"secret"`
+
+	// AuthenticatedAccess is the Restriction for calls without a secret
+	AuthenticatedAccess Restriction `json:"authenticatedAccess"`
+
+	// UnAuthenticatedAccess is the Restriction for calls containing a secret
+	UnauthenticatedAccess Restriction `json:"unauthenticatedAccess"`
 }
 
-type Limit struct {
-	Active           bool          `json:"active"`
-	Unlimited        bool          `json:"unlimited"`
-	Limit            int           `json:"limit"`
-	LimitTimeframe   time.Duration `json:"limitTimeframe"`
-	RefererWhitelist []string      `json:"refererWhitelist"`
+type Restriction struct {
+	// Active tells, if this access is allowed at all
+	Active bool `json:"active"`
+
+	// IPLimit is the maximum number of usages per ip and timeframe, 0 means unlimited
+	IPLimit int `json:"ipLimit"`
+
+	// IPLimitTimeframe is the duration for counting against the ip limit
+	IPLimitTimeframe time.Duration `json:"ipLimitTimeframe"`
+
+	// RefererWhitelist is a list of allowed referer. Len() == 0 means: all referers are allowed
+	RefererWhitelist []string `json:"refererWhitelist"`
 }
 
 type ApiUsage struct {
@@ -77,7 +94,7 @@ type ApiUsage struct {
 	Time time.Time `json:"time"`
 
 	// The ip of the client
-	Ip string `json:"ip"`
+	IP string `json:"ip"`
 
 	// Application specific usage attributes
 	Attributes map[string]string `json:"attributes"`

@@ -27,7 +27,6 @@ func (h *CaddyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) (int, e
 
 	// allow acces in the case, that we could not get the limit
 	if err != nil || remaining > 0 {
-		//h.store.Log(key, secret, ip, referer)
 		return h.next.ServeHTTP(w, r)
 	}
 

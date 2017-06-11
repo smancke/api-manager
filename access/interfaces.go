@@ -4,5 +4,4 @@ package access
 //go:generate $GOPATH/bin/mockgen -package access -destination $GOPATH/src/github.com/smancke/api-manager/access/mocks_test.go github.com/smancke/api-manager/access UsageStore
 type UsageStore interface {
 	GetLimit(key, secret, ip, referer string) (remaining, limit int, reset uint64, err error)
-	Log(key, ip, referer string, attributes map[string]string)
 }
